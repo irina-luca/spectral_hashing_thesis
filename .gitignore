@@ -1,0 +1,5 @@
+*.pyc
+Data/
+Results/
+.idea/
+*.html

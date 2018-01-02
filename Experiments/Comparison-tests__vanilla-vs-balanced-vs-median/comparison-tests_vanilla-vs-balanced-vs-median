@@ -1,0 +1,412 @@
+# -- Random data: random_1 -- #
+0. Observations
+- running commands, but make sure to run the desired compress_dataset_... version!
+    python train.py -input "./Data/Tests/random_1" -model "./Results/Tests/Models/random_1_bits-2" -bits 2 -log_file_train "./Results/Tests/Logs/random_1_bits-2.train.log"
+
+    python test.py -model "./Results/Tests/Models/random_1_bits-2" -testing "./Data/Tests/random_1" -mhd 5 -k 3 -log_file_test "./Results/Tests/Logs/random_1_bits-2.test.log" -log_file_others "./Results/Tests/Logs/random_1_bits-2.others.log" -eval_type=1
+
+- as expected,
+    PC_0 : [1.0]
+    PC_1 : [1.0]
+
+- data is random and around the unit sphere
+
+
+
+1. Vanilla
+- u_training =>
+ [[False False]
+ [ True  True]
+ [ True False]
+ [False  True]
+ [False  True]
+ [ True False]
+ [False False]
+ [ True  True]
+ [ True False]
+ [False  True]]
+
+- the sine becomes very very messy. I wonder if that is important to keep in mind and if it explains the bad scores for random data, as partition cuts might be many, but they all interfere badly and data is simply split in fewer buckets than expected (e.g.: all the line cuts are placed in the middle, points on the left get True, the ones on the right get False and so all the desired 0-1-0-1 alternating partitioning somehow gets 'compressed' into this messy and undesirable split of simply and in fact two values 0-1/ 2 buckets for that specific bit/ False-True)
+
+- scores =>
+score_precision
+[[ 0.64285714]
+ [ 0.30555556]
+ [ 0.22      ]...]
+score_recall
+[[ 0.81818182]
+ [ 1.        ]...]
+
+
+2. Balanced
+- u_training =>
+u =>
+ [[ True  True]
+ [False False]
+ [False  True]
+ [ True False]
+ [ True False]
+ [False  True]
+ [ True  True]
+ [False False]
+ [False  True]
+ [ True False]]
+
+Points distribution to buckets per pc=0 is =>
+[5, 5]
+Points distribution to buckets per pc=1 is =>
+[5, 5]
+
+- scores =>
+score_precision
+[[ 0.74074074]
+ [ 0.30136986]
+ [ 0.22      ]...]
+score_recall
+[[ 0.90909091]
+ [ 1.        ]...]
+
+
+- as the data is randomly spread around the unit sphere, we notice how points are equally distributed for each bit partitioning
+- compared to vanilla above, the hash-codes are kept exactly the same (disregarding the 0-1 switch)
+- scores are slightly bigger than with vanilla, maybe an indication that for random data, balanced partitioning SH could be better than vanilla SH?!
+
+
+3. Median
+
+- scores =>
+score_precision
+[[ 0.64285714]
+ [ 0.30555556]
+ [ 0.22      ]...]
+score_recall
+[[ 0.81818182]
+ [ 1.        ]...]
+
+- u =>
+ [[ True  True]
+ [False False]
+ [False  True]
+ [ True False]
+ [ True False]
+ [False  True]
+ [ True  True]
+ [False False]
+ [False  True]
+ [ True False]]
+
+- the hash-codes are same as the 2 above cases
+
+
+
+# -- Clustered data: clustered_2cl_1 -- #
+0. Observations
+- running commands =>
+    python train.py -input "./Data/Tests/clustered_2cl_1" -model "./Results/Tests/Models/clustered_2cl_1_bits-2" -bits 2 -log_file_train "./Results/Tests/Logs/clustered_2cl_1_bits-2.train.log"
+
+    python test.py -model "./Results/Tests/Models/clustered_2cl_1_bits-2" -testing "./Data/Tests/clustered_2cl_1" -mhd 5 -k 3 -log_file_test "./Results/Tests/Logs/clustered_2cl_1_bits-2.test.log" -log_file_others "./Results/Tests/Logs/clustered_2cl_1_bits-2.others.log" -eval_type=1
+
+- as expected,
+    PC_0 : [1.0, 2.0]
+
+- data contains 2 clusters, well delimited from each other
+
+
+
+1. Vanilla
+- u =>
+ [[False  True]
+ [ True  True]
+ [False  True]
+ [ True  True]
+ [False  True]
+ [False  True]
+ [ True  True]
+ [ True  True]
+ [ True  True]
+ [False  True]]
+
+- the plot for the second pc probably doesn't contain any cut, since only the 1st pc contributes with bits to the hash-codes. Moreover, if the hashcodes would include the bit which the 2nd PC contributes with, that would anyways be redundant. As we see from the figure, the sine gives +/1/True for that bit no matter the data point, which would be a needless bit concatenation
+
+- as we notice from the hash-codes, indeed, the data is split in only 2 buckets
+
+- scores =>
+score_precision
+[[ 0.]
+ [ 0.]...]
+score_recall
+[[ 0.]
+ [ 0.]...]
+
+
+
+2. Balanced
+- u =>
+ [[ True False]
+ [False False]
+ [ True False]
+ [False False]
+ [ True False]
+ [ True False]
+ [False False]
+ [False False]
+ [False False]
+ [ True False]]
+
+- Points distribution to buckets per pc=0 is =>
+[5, 0, 0, 5]
+
+
+- again, the hash-codes are the same as for above, with vanilla (disregarding the True-False switch), such that only 2 buckets out of 4 are non-empty
+
+- scores =>
+score_precision
+[[ 0.]
+ [ 0.]...]
+score_recall
+[[ 0.]
+ [ 0.]...]
+
+
+3. Median
+- grey_codes_per_pc => {'0': ['00', '01', '11', '10']}
+
+- u =>
+ [[ True False]
+ [False  True]
+ [ True  True]
+ [False  True]
+ [ True False]
+ [ True False]
+ [False False]
+ [False False]
+ [False False]
+ [ True  True]]
+
+- Points distribution to buckets per pc=0 is =>
+[3, 2, 2, 3]
+
+
+- scores =>
+score_precision
+[[ 0.]
+ [ 0.]...]
+score_recall
+[[ 0.]
+ [ 0.]...]
+
+
+Q1: WHY ARE SCORES 0 IN ALL CASES?
+Q2: HOW do I test/interpret depending on k, #bits, data type etc.? I am very bad at this thing.
+
+
+# -- Clustered data: clustered_3cl_1 -- #
+0. Observations
+- running commands =>
+    python train.py -input "./Data/Tests/clustered_3cl_1" -model "./Results/Tests/Models/clustered_3cl_1_bits-2" -bits 2 -log_file_train "./Results/Tests/Logs/clustered_3cl_1_bits-2.train.log"
+
+    python test.py -model "./Results/Tests/Models/clustered_3cl_1_bits-2" -testing "./Data/Tests/clustered_3cl_1" -mhd 5 -k 3 -log_file_test "./Results/Tests/Logs/clustered_3cl_1_bits-2.test.log" -log_file_others "./Results/Tests/Logs/clustered_3cl_1_bits-2.others.log" -eval_type=1
+
+- PC_0 : [1.0, 2.0]
+
+- data contains 3 clusters, well separated from each other
+
+
+
+1. Vanilla
+- u =>
+ [[ True  True]
+ [ True  True]
+ [ True  True]
+ [ True  True]
+ [False  True]
+ [False  True]
+ [False  True]
+ [ True  True]
+ [False  True]
+ [ True  True]]
+
+- scores =>
+[[ 0.53846154]
+ [ 0.28      ]...]
+score_recall
+[[ 1.]...]
+
+2. Balanced
+- Points distribution to buckets per pc=0 is =>
+[6, 0, 0, 4]
+
+- u =>
+ [[False False]
+ [False False]
+ [False False]
+ [False False]
+ [ True False]
+ [ True False]
+ [ True False]
+ [False False]
+ [ True False]
+ [False False]]
+
+- score_precision
+[[ 0.53846154]
+ [ 0.28      ]...]
+score_recall
+[[ 1.]...]
+
+- same hash-codes as vanilla, same scores, same partitioning
+
+
+3. Median
+- Points distribution to buckets per pc=0 is =>
+[3, 2, 2, 3]
+-------------------------------------------------------------
+- grey_codes_per_pc => {'0': ['00', '01', '11', '10']}
+
+- u =>
+ [[False False]
+ [False  True]
+ [ True  True]
+ [False  True]
+ [ True False]
+ [ True False]
+ [ True False]
+ [False False]
+ [ True  True]
+ [False False]]
+
+- scores =>
+score_precision
+[[ 0.61538462]
+ [ 0.34210526]
+ [ 0.28      ]...]
+score_recall
+[[ 0.57142857]
+ [ 0.92857143]
+ [ 1.        ]...]
+
+
+
+
+
+
+# -- Data with outlier: outlier_1 -- #
+0. Observations
+- running commands =>
+    python train.py -input "./Data/Tests/outlier_1" -model "./Results/Tests/Models/outlier_1_bits-2" -bits 2 -log_file_train "./Results/Tests/Logs/outlier_1_bits-2.train.log"
+
+    python test.py -model "./Results/Tests/Models/outlier_1_bits-2" -testing "./Data/Tests/outlier_1" -mhd 5 -k 3 -log_file_test "./Results/Tests/Logs/outlier_1_bits-2.test.log" -log_file_others "./Results/Tests/Logs/outlier_1_bits-2.others.log" -eval_type=1
+
+- PC_0 : [1.0, 2.0]
+
+- data contains 1 cluster and 1 outlier
+
+
+
+1. Vanilla
+- weird not to see 3 line cuts for pc=0. we see only 1?!
+
+- scores =>
+score_precision
+[[ 1.  ]
+ [ 0.82]...]
+score_recall
+[[ 1.]...]
+
+- u =>
+ [[False  True]
+ [False  True]
+ [False  True]
+ [False  True]
+ [False  True]
+ [False  True]
+ [False  True]
+ [False  True]
+ [False  True]
+ [ True  True]]
+
+- as expected, the cluster is placed in one bucket and the outlier in the other one
+
+
+2. Balanced
+- scores same as vanilla =>
+score_precision
+[[ 1.  ]
+ [ 0.82]...]
+score_recall
+[[ 1.]...]
+
+- hashcodes the same as vanilla =>
+u =>
+ [[False False]
+ [ True False]
+ [ True False]
+ [ True False]
+ [ True False]
+ [ True False]
+ [ True False]
+ [ True False]
+ [ True False]
+ [ True False]]
+
+- Points distribution to buckets per pc=0 is =>
+[1, 0, 0, 9]
+
+
+3. Median
+- scores =>
+score_precision
+[[ 0.84615385]
+ [ 0.81578947]
+ [ 0.82      ]...]
+score_recall
+[[ 0.26829268]
+ [ 0.75609756]
+ [ 1.        ]...]
+
+- u =>
+ [[ True False]
+ [ True  True]
+ [False False]
+ [ True False]
+ [False  True]
+ [ True  True]
+ [False  True]
+ [False False]
+ [ True False]
+ [False False]]
+
+- Points distribution to buckets per pc=0 is =>
+[3, 2, 2, 3]
+
+- grey_codes_per_pc =>
+{'0': ['00', '01', '11', '10']}
+
+Q1: If we compare the scores of median with the ones above, it would seem they are worse. However, in this case, they seem more reliable to me, as in the other cases big precision happens for the outlier and big recall happens for the cluster. What do we do about this?
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================
+
+* Check how lossy hashing from 256D -> 256D is with vanilla SH, k=100, ss=1000, ts=100:
+python train.py -input "./Data/Tests/random_1000ss_256d_1" -model "./Results/Tests/Models/random_1000ss_32d_1_bits-32" -bits 32 -log_file_train "./Results/Tests/Logs/random_1000ss_32d_1_bits-32.train.log"
+
+python test.py -model "./Results/Tests/Models/random_1000ss_32d_1_bits-32" -testing "./Data/Tests/random_1000ss_256d_1" -mhd 20 -k 100 -log_file_test "./Results/Tests/Logs/random_1000ss_32d_1_bits-32.test.log" -log_file_others "./Results/Tests/Logs/random_1000ss_32d_1_bits-32.others.log" -eval_type=1
+
+0. Observations:
+- as expected, each PC is cut once, with mode=1
+- each non-empty bucket contains exactly 1 data point
+- scores are all 0
+- for each bit =>
+    -- it seems like the scores are accumulated somewhat more to the center
+    -- it seems like instead of presenting a cut by mode=1, it cuts very much, probably because the sine +/- values vary a lot up/down
