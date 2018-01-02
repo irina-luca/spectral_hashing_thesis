@@ -39,26 +39,6 @@ def evaluate_with_approximate_gt_d_balls(w_true_test_training, u_compactly_binar
     for ith_testing, compact_testing_point in enumerate(u_compactly_binarized_testing):
         distances_from_testing_to_all_training = BIT_CNT_MAP[np.bitwise_xor(compact_testing_point, u_compactly_binarized_training)].sum(1)
 
-        # if ith_testing == 13:
-        #     print("DEBUG")
-        #     for d, distance_tt in enumerate(BIT_CNT_MAP[np.bitwise_xor(compact_testing_point, u_compactly_binarized_training)]):
-        #         if d in range(0, 10):
-        #             print("{0}: {1} => sum: {2}".format(d, distance_tt, sum(distance_tt)))
-        #
-        #     print("distances_from_testing_to_all_training", distances_from_testing_to_all_training)
-        #     print("compact_testing_point", compact_testing_point)
-        #     print("u_compactly_binarized_training[3]", u_compactly_binarized_training[3])
-        #     print("u_testing_point[ith_testing]", u_testing[ith_testing])
-        #     print("u_training[3]", u_training[3])
-        #     h_d = BIT_CNT_MAP[np.bitwise_xor(compact_testing_point, u_compactly_binarized_training[3])]
-        #     h_d_normal = dist_hamming(u_testing[ith_testing], u_training[3])
-        #     print("hamming_dist bugged", h_d, type(h_d))
-        #     print("hamming_dist normal", h_d_normal, type(h_d_normal))
-        #     print("DEBUG")
-        # pickle.dump(distances_from_testing_to_all_training,  open("./Results/Tests__Why_is_balanced_worse_than_vanilla/Logs/t1.array", "wb"))
-
-        # print(distances_from_testing_to_all_training)
-        # print("distances_from_testing_to_all_training, from test_point[{0}] => {1} \n".format(ith_testing, distances_from_testing_to_all_training))
         for hamming_distance_used_to_test_against in range(0, max_hamming_distance_tested):
             indices_pairs_of_good_pairs_in_d_hamm = np.where(distances_from_testing_to_all_training < hamming_distance_used_to_test_against + 0.00001)
 
@@ -67,13 +47,6 @@ def evaluate_with_approximate_gt_d_balls(w_true_test_training, u_compactly_binar
             retrieved_pairs[hamming_distance_used_to_test_against][0] += size(indices_pairs_of_good_pairs_in_d_hamm)
 
     for hamming_distance_used_to_test_against in range(0, max_hamming_distance_tested):
-        # print("# ----------------------------------------------------------- #")
-        # print("P = retrieved_good_pairs / retrieved_pairs \n")
-        # print("R = retrieved_good_pairs / total_good_pairs \n")
-        # print("hamming_distance => {0} \n".format(hamming_distance_used_to_test_against))
-        # print("retrieved_good_pairs => {0} \n".format(retrieved_good_pairs[hamming_distance_used_to_test_against][0]))
-        # print("retrieved_pairs => {0} \n".format(retrieved_pairs[hamming_distance_used_to_test_against][0]))
-        # print("total_good_pairs => {0} \n".format(total_good_pairs))
         score_precision[hamming_distance_used_to_test_against][0] = retrieved_good_pairs[hamming_distance_used_to_test_against][0] / (retrieved_pairs[hamming_distance_used_to_test_against][0] * 1.0 + 0.00000001)
         score_recall[hamming_distance_used_to_test_against][0] = retrieved_good_pairs[hamming_distance_used_to_test_against][0] / (total_good_pairs * 1.0 + 0.00000001)
 
@@ -105,9 +78,6 @@ def calculate_approximate_ground_truth_with_d_ball(data_train_norm, data_test_no
         from_index = to_index_to_store
         to_index = from_index + test_chunk.shape[0]
         to_index_to_store = to_index
-        # print(from_index, "### count_index_extension * test_chunk_ith", count_index_extension, test_chunk_ith)
-        # print(to_index, "### count_index_extension * test_chunk_ith + count_index_extension", count_index_extension, test_chunk_ith)
-        # print("")
         w_true_test_training[from_index:to_index, :] = d_true_test_training_chunk < d_ball
 
 

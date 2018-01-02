@@ -77,13 +77,6 @@ def compress_dataset__median_partitioning__corrected(data_train_norm, data_test_
                     provenance_bucket_index = bucket_index if pc_score < closest_to_median_cut_point else bucket_index + 1
                     bits_to_attach = [int(bit_str) for bit_str in gray_codes_pc[provenance_bucket_index]]
                     data_hashcodes[dp] = np.hstack((data_hashcodes[dp], bits_to_attach))
-                    # print("pc_" + str(pc) + ", point_" + str(dp) + ", hashcode_" + str(data_hashcodes[dp]) + ", bucket-index_" + str(provenance_bucket_index))
-                    # points_distrib_per_pc[provenance_bucket_index] += 1
-
-                    #         print("Points distribution to buckets per pc=" + str(pc) + " is =>")
-                    #         print(points_distrib_per_pc)
-                    #         print("-------------------------------------------------------------")
-                    # print("grey_codes_per_pc => {0}\n".format(grey_codes_per_pc))
 
             u = np.array(data_hashcodes, dtype=bool)
             u_compactly_binarized = compact_bit_matrix(u)
@@ -152,11 +145,6 @@ def compress_dataset__median_partitioning(data_train_norm, data_test_norm, sh_mo
 
             # -- Plot box/PC partitions -- #
             median_cut_points = find_median_recursively__short(pc_scores, num_buckets_per_pc - 1)
-            # print("PC_" + str(pc) + ", median_cut_points => ", median_cut_points)
-            # plot_2D(np.hstack((np.vstack(pc_scores), np.zeros((len(pc_scores), 1)))), True, "Balanced", median_cut_points, "orange")
-
-            # -- Check how points are distributed per each pc -- #
-            # points_distrib_per_pc = [0 for _ in range(0, len(gray_codes_pc))]
 
             # -- Go through each data point in my pc box and check only the score corresponding to that pc dimension -- #
             for dp, pc_score in enumerate(pc_scores):
@@ -165,20 +153,9 @@ def compress_dataset__median_partitioning(data_train_norm, data_test_norm, sh_mo
                 provenance_bucket_index = bucket_index if pc_score < closest_to_median_cut_point else bucket_index + 1
                 bits_to_attach = [int(bit_str) for bit_str in gray_codes_pc[provenance_bucket_index]]
                 data_hashcodes[dp] = np.hstack((data_hashcodes[dp], bits_to_attach))
-                # print("pc_" + str(pc) + ", point_" + str(dp) + ", hashcode_" + str(data_hashcodes[dp]) + ", bucket-index_" + str(provenance_bucket_index))
-                # points_distrib_per_pc[provenance_bucket_index] += 1
-
-    #         print("Points distribution to buckets per pc=" + str(pc) + " is =>")
-    #         print(points_distrib_per_pc)
-    #         print("-------------------------------------------------------------")
-    # print("grey_codes_per_pc => {0}\n".format(grey_codes_per_pc))
 
     u = np.array(data_hashcodes, dtype=bool)
-    if dataset_label == "testing":
-        print("len(u[0])", len(u[0]))
     u_compactly_binarized = compact_bit_matrix(u)
-
-    # print("u => \n", u)
 
     return u, u_compactly_binarized
 

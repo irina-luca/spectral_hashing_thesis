@@ -201,30 +201,5 @@ def main():
     plt.show()
 
 
-
-
-
-
-    #
-    # # -- PCA the data as in the algo -- #
-    # pc_algo, data_norm_pcaed_algo = pca_as_algo(data_train_original_norm_2D, 2, 2)
-    # print("# -- pc_algo -- #")
-    # print(pc_algo)
-    # print("# -- data_norm_pcaed_algo -- #")
-    # print(data_norm_pcaed_algo)
-    #
-    # # -- PCA the data with normal PCA library -- #
-    # pca = PCA(n_components=2)
-    # data_norm_pcaed_library = pca.fit_transform(data_train_original_norm_2D)
-    # print("# -- data_norm_pcaed_library -- #")
-    # print(data_norm_pcaed_library)
-    # print("pca.components_")
-    # print(pca.components_)
-    # # -- Plot data vs. PCAed data -- #
-    # max_val_PC = data_norm_pcaed_library.max(axis=0) + 0.2
-    #
-    # min_val_PC = data_norm_pcaed_library.min(axis=0) - 0.2
-    # # plot_3subfigs_2D(data_train_original_norm_2D, data_norm_pcaed_algo, data_norm_pcaed_library, [1.2, 1.2], [-1.2, -1.2])
-
 main()
 

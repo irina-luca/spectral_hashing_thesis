@@ -133,11 +133,6 @@ def compress_dataset__pc__dominance_by_modes_order__actual_pcs(data_train_norm, 
                         provenance_bucket_index = bucket_index if bucket_index < num_gray_codes else num_gray_codes - 1
                         bits_to_attach = [int(bit_str) for bit_str in gray_codes_pc[provenance_bucket_index]]
 
-                        # if dataset_label == "testing" and dp == 49:
-                        #     print("data_box:\n{0}".format(pc_scores))
-                        #     print("ith_bit={0}\n{1}th PC, with pc_cols:{4}\npc_score={2}\nbit_assigned={3}\n----------------------------------------------".format(pth, pc, pc_score, gray_codes_pc[provenance_bucket_index], pcs_ith_bits_mapping[str(pc)]))  # data_box={4} / pc_scores
-                        #     print("")
-
                         # -- Limit hashcode length to whatever needed initially, even if it exceeds -- #
                         if len(data_hashcodes[dp]) < sh_model.n_bits:
                             data_hashcodes[dp] = np.hstack((data_hashcodes[dp], bits_to_attach))

@@ -3,8 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 
-# Usage: python "Dataset_Generators/generators__random/randomdata-unit-sphere.py" -n 1000 -d 2 -output "Experiments/Paper_Reconstruction_Results/RandomUS__ss-1000__1.train"
-
 
 def sample_spherical(n_samples, n_dim):
     vec = np.random.randn(n_dim, n_samples)

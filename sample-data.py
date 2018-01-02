@@ -3,10 +3,7 @@ import random
 import numpy as np
 import argparse
 
-# Usage for fraction: python sample-data.py -i "./Data/Handmade/h1.train" -dataset_size 6 -ss_or_fr "fr" -fr 2 -seed 1 -num_s 2 -ext ".train"
-# Usage for sample size: python sample-data.py -i "./Data/Handmade/h1.train" -dataset_size 6 -ss_or_fr "ss" -ss 5000 -seed 1 -num_s 2 -ext ".train"
-
-# Start with sampling and evaluation example on MNIST case n=1000
+# -- Usage Example on MNIST case n=1000 -- #
 # python sample-data.py -i "./Data/MNIST/mnist.data" -dataset_size 70000 -ss_or_fr "ss" -ss 1000 -ext -num_s=1 ".train"
 # python sample-data.py -i "./Data/MNIST/mnist.data" -dataset_size 70000 -ss_or_fr "ss" -ss 1000 -ext ".test"
 

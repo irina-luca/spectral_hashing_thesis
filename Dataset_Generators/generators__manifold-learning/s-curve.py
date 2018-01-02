@@ -33,21 +33,3 @@ def main_s_curve():
 
 if __name__ == '__main__':
     main_s_curve()
-
-
-# Dog and Cancer examples: if I get asked 'is this a dog?', then I always answer 'yes', which means I always get to recall almost all the dogs, but I never get to 'match' only the good ones, meaning precision is going to be low
-# [[ 0.0104411 ]
-#  [ 0.00394713]
-#  [ 0.002876  ]
-#  [ 0.002876  ]
-#  [ 0.002876  ]]
-# [[ 0.99374131]
-#  [ 0.99930459]
-#  [ 1.        ]
-#  [ 1.        ]
-#  [ 1.        ]]
-# [[ 0.02066507]
-#  [ 0.0078632 ]
-#  [ 0.0057355 ]
-#  [ 0.0057355 ]
-#  [ 0.0057355 ]]

@@ -54,12 +54,6 @@ def plot_f1_vs_num_bits_for_diff_datasets():
     # Draw a line plot to show the trajectory of each random walk
     grid = (grid.map(sns.pointplot, "Number of bits", "max(F1)", hue=data.iloc[:, 1], palette="muted", markers=["*", "*", "*", "*", "*", "*"]).add_legend())
 
-    # new_title = 'My title'
-    # grid._legend.set_title(new_title)
-    # new_labels = ['label 1', 'label 2', '3', '4', '5', '6']
-    # for t, l in zip(grid._legend.texts, new_labels): t.set_text(l)
-
-
     # Adjust the tick positions and labels
     grid.set(xticks=np.arange(6),
              yticks=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7],
@@ -89,11 +83,6 @@ def plot_num_cuts_vs_num_bits_for_diff_datasets():
 
     # Draw a line plot to show the trajectory of each random walk
     grid = (grid.map(sns.pointplot, "Dataset", "Max cuts per PC", palette="muted").add_legend())
-
-    # new_title = 'My title'
-    # grid._legend.set_title(new_title)
-    # new_labels = ['label 1', 'label 2', '3', '4', '5', '6']
-    # for t, l in zip(grid._legend.texts, new_labels): t.set_text(l)
 
 
     # Adjust the tick positions and labels
@@ -128,11 +117,6 @@ def plot_num_bits_vs_hamm_ball_of_max_F1_for_diff_datasets():
     grid = (grid.map(sns.pointplot, "Number of bits", "Hamming ball", hue=data.iloc[:, 1], palette="muted",
                      markers=["*", "*", "*", "*", "*", "*"]).add_legend())
 
-    # new_title = 'My title'
-    # grid._legend.set_title(new_title)
-    # new_labels = ['label 1', 'label 2', '3', '4', '5', '6']
-    # for t, l in zip(grid._legend.texts, new_labels): t.set_text(l)
-
 
     # Adjust the tick positions and labels
     grid.set(xticks=np.arange(6),
@@ -162,11 +146,6 @@ def plot_num_bits_vs_precision_or_recall_at_fixed_hamming_ball():
 
     # Draw a line plot to show the trajectory of each random walk
     grid = (grid.map(sns.barplot, "Number of bits", "Precision", hue=data.iloc[:, 1], palette="muted").add_legend())
-
-    # new_title = 'My title'
-    # grid._legend.set_title(new_title)
-    # new_labels = ['label 1', 'label 2', '3', '4', '5', '6']
-    # for t, l in zip(grid._legend.texts, new_labels): t.set_text(l)
 
 
     # Adjust the tick positions and labels

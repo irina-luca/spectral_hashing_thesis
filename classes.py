@@ -30,31 +30,3 @@ class EvalDebugApproachComponents(object):
     def __str__(self):
         return str(self.hamm_dist_debug) + "; \n" + str(self.compress_type)
 
-
-
-#
-# class DataBoxEvalObject(object):
-#     def __init__(self):
-#         print("Initialized empty DataBoxEvalObject object.")
-#
-#     def __set_data_box__(self, data_box):
-#         self.data_box = data_box
-#
-#     def __set_ith_bit__(self, ith_bit):
-#         self.ith_bit = ith_bit
-#
-#     def __set_pc__(self, pc):
-#         self.pc = pc
-#
-#     def __set_pc_score__(self, pc_score):
-#         self.pc_score = pc_score
-#
-#     def __set_bits_assigned__(self, bits_assigned):
-#         self.bits_assigned = bits_assigned
-#
-#     def __set_ith_bit_pcs__(self, ith_bit_pcs):
-#         self.ith_bit_pcs = ith_bit_pcs
-#
-#     def __str__(self):
-#         return str(self.compress_type)
-#

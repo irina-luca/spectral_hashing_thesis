@@ -8,9 +8,6 @@ def decide_pcs_bit_dominance(sh_model):
         dominant_pc_per_mode = [m for m, mode_val in enumerate(mode) if mode_val != 0]
         pcs_ordered_by_dominance.append(dominant_pc_per_mode[0])
 
-    print_help("pcs_ordered_by_dominance", pcs_ordered_by_dominance)
-    # print(len(pcs_ordered_by_dominance))
-
     # -- Assign decreasing num_bits to pcs, according to their established dominance -- #
     num_bits_pcs = []
     bits_per_pcs = get_pc_bitwise_contribution(sh_model)
@@ -26,9 +23,6 @@ def decide_pcs_bit_dominance(sh_model):
     num_bits_from_pcs = []
     for p, (pc, num_bits) in enumerate(zip(pcs_ordered_by_dominance_limited, num_bits_pcs)):
         surplus = 1
-        # surplus = p / (p * 1.0 + 1.0) + 1
-        # surplus = p / (p * 1.0 + 1.0) + 1
-        # surplus = surplus if num_bits > 2 else 1
         num_bits_from_pcs.append((pc, int(num_bits + surplus)))
 
     print_help("num_bits_from_pcs", num_bits_from_pcs)
@@ -127,10 +121,6 @@ def compress_dataset__pc_dominance_by_modes_order(data_train_norm, data_test_nor
     u = np.array(data_hashcodes, dtype=bool)
     u_compactly_binarized = compact_bit_matrix(u)
 
-    # print_help("total_bits", total_bits)
-    # if dataset_label == "testing":
-    #     print_help("u[49]", u[49].astype(int))
-    #     print_help("len(u[49])", len(u[49].astype(int)))
 
     return u, u_compactly_binarized
 

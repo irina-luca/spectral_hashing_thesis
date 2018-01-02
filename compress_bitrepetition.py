@@ -74,28 +74,14 @@ def compress_dataset__bit_repetition(data_train_norm, data_test_norm, sh_model, 
                     bits = [int(bit_str) for bit_str in gray_codes_pc[provenance_bucket_index]]
                     bits_to_attach = bits
 
-                    # if dataset_label == "testing" and dp == 49:
-                    #     total_bits += len(bits_to_attach)
-                    #     print("pc={0}, COND 1, bits_to_attach={1}".format(pc, bits_to_attach))
-                    #     print("")
-
                     if num_bits_of_contribution > 1:
                         pcs_to_distribute_bits_to = pcs_ith_bits_mapping[str(pc)]
                         pc_bit_paired_up = [(the_pc, the_bit) for the_pc, the_bit in zip(pcs_to_distribute_bits_to, bits)]
                         if pc_bit_paired_up not in bits_stored_for_later[dp]:
                             bits_stored_for_later[dp].extend(pc_bit_paired_up)
-
-                        # if dataset_label == "testing" and dp == 49:
-                        #     print("STORED bits for pc={0}, for these pcs={1}, bits_stored_for_later[dp]={2}".format(pc, pcs_to_distribute_bits_to, bits_stored_for_later[dp]))
-                        #     print("")
                 else:
                     bits = [tup[1] - 1 for tup in bits_stored_for_later[dp] if tup[0] == pc]
                     bits_to_attach = bits if bits[0] > 0 else [0]
-
-                    # if dataset_label == "testing" and dp == 49:
-                    #     print("PC={0}, COND 2, bits_to_attach={1}".format(pc, bits_to_attach))
-
-                # -- END: BIT REPETITION IDEA, WHICH INITIALLY I THOUGHT OF BEING THE SAME AS THE BUGGED/GOOD VERSION OF BALANCED, WHICH IS ALSO COPY-PASTED DOWN, IN THIS FILE, BUT IT ISN'T -- #
 
                 data_hashcodes[dp] = np.hstack((data_hashcodes[dp], bits_to_attach))
 

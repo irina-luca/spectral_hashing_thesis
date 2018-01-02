@@ -47,9 +47,6 @@ def train_sh(data_norm, bits_to_encode_to, data_train_filename_location, log_fil
         data_norm_pcaed = data_norm.dot(pc)
 
         log_value_to_file(log_file_train, bits_to_encode_to, "bits_to_encode_to")
-        #log_value_to_file(log_file_train, n_pca, "n_pca")
-        # log_array_to_file(log_file_train, pc, "pc")
-
 
         # -- Fit uniform distribution -- #
         log_headline(log_file_train, "# -- Fit uniform distribution -- #")
@@ -110,14 +107,9 @@ def train_sh(data_norm, bits_to_encode_to, data_train_filename_location, log_fil
 
 def plot_sine_partitioning_vanilla_sh(data_norm_pcaed_and_centered, omega_i, ys):
     data_box = data_norm_pcaed_and_centered * omega_i + math.pi / 2
-    # nonzero_col_index = np.nonzero(np.all(data_norm_pcaed_and_centered * omega_i != 0, axis=0))[0][0]
     nonzero_col_index = np.nonzero(data_norm_pcaed_and_centered * omega_i)[1][0]
     x_lin_data = data_box[:, nonzero_col_index]
-    # list(x_lin_data).extend([0])
     y_sin_data = ys[:, nonzero_col_index]
-
-    # print("HELOOOO x", x_lin_data)
-    # print("HELOOOO y", y_sin_data)
 
     x_y = zip(x_lin_data, y_sin_data)
     x_y_sorted = sorted(list(x_y).copy(), key=lambda x: x[0])
@@ -137,12 +129,7 @@ def plot_sine_partitioning_vanilla_sh(data_norm_pcaed_and_centered, omega_i, ys)
     plt.show()
 
 def get_sine_data_box(data_norm_pcaed_and_centered, sh_model, data_norm_n):
-    # print_help("BALANCED, omega_zero", sh_model.omega_zero)
-    # print_help("BALANCED, mx", sh_model.mx)
-    # print_help("BALANCED, mn", sh_model.mn)
-    # print_help("BALANCED, sh_model.modes", sh_model.modes)
     omega_zero_non_pi = sh_model.omega_zero #/ math.pi
-    # print("omega_zero_non_pi!!!", omega_zero_non_pi)
 
     omegas_compress_training = sh_model.modes * np.tile(omega_zero_non_pi, (sh_model.n_bits, 1))
     data_box = np.zeros((data_norm_n, sh_model.n_bits))
@@ -151,21 +138,12 @@ def get_sine_data_box(data_norm_pcaed_and_centered, sh_model, data_norm_n):
         omega_i = np.tile(omegas_compress_training[ith_bit, :], (data_norm_n, 1))
         nonzero_col_index = np.nonzero(np.all(omega_i != 0, axis=0))[0][0]
         data_box[:, ith_bit] = data_norm_pcaed_and_centered[:, nonzero_col_index] * omega_i[:, nonzero_col_index] + math.pi / 2
-        # if ith_bit == 22:
-        #     print("nonzero_col_index={0}, for ith_bit={1}".format(nonzero_col_index, ith_bit))
-        #     print("###", data_box[:, ith_bit], "###")
-        # print("max per bit/dim {0} => {1}".format(max(data_box[:, ith_bit]), ith_bit))
-        # print("min per bit/dim {0} => {1}".format(min(data_box[:, ith_bit]), ith_bit))
-        # print((max(data_box[:, ith_bit]) - min(data_box[:, ith_bit])) / 2.0 + min(data_box[:, ith_bit]), "mid_point_test")
     return data_box
 
 
 def print_min_max_data_box(data_box, label):
-    print("\n# -- Databox Min/Max for {0} -- #".format(label))
     max_column_data_box = data_box.max(axis=0)
     min_column_data_box = data_box.min(axis=0)
-    print_help("\nmax_column_{0}".format(label), max_column_data_box)
-    print_help("min_column_{0}\n\n".format(label), min_column_data_box)
 
 
 def get_pc_bitwise_contribution(sh_model):
@@ -186,9 +164,6 @@ def get_pc_order_as_vanilla(sh_model):
         nonzero_col_index = np.nonzero(ord_mode)[0][0]
         if not nonzero_col_index in pcs_ordered:
             pcs_ordered.append(nonzero_col_index)
-    print_help("ORDERED_MODES => ", ordered_modes)
-    print_help("UNORDERED_MODES => ", unordered_modes)
-    print_help("PCS_ORDERED => ", pcs_ordered)
 
     return pcs_ordered
 
@@ -197,10 +172,7 @@ def get_next_pc_to_attach_bits_from(bits_per_pcs, pcs_ordered, pc):
     pcs_to_sum = [0]
     pcs_to_sum.extend(
         [len(bits_per_pcs[str(pcth)]) for pcth in pcs_ordered if str(pcth) in bits_per_pcs.keys() and pcth < pc])
-    # print_help("pcs_to_sum", pcs_to_sum)
-    # print_help("pcs_to_sum.sum()", sum(pcs_to_sum))
     pc = sum(pcs_to_sum)
-    # print("PC to look at is ", pc)
     return pc
 
 def order_modes_for_bit_contribution(sh_model):
@@ -215,7 +187,6 @@ def order_modes_for_bit_contribution(sh_model):
             ordered_modes[filled_row_th, :] = sh_model.modes[cut_index, :]
             filled_row_th += 1
 
-    # print("ordered_modes: {0}".format(ordered_modes))
     return ordered_modes
 
 
@@ -230,20 +201,6 @@ def get_data_box_info(data_box_train, pc, num_buckets_per_pc):
 
 
 
-# bits_contribution_and_ordering_per_pcs: {'0': [(1.0, 0), (2.0, 17)], '1': [(1.
-# 0, 1), (2.0, 19)], '2': [(1.0, 2), (2.0, 27)], '3': [(1.0, 3), (2.0, 29)], '4'
-# : [(1.0, 5)], '5': [(1.0, 4)], '6': [(1.0, 11)], '7': [(1.0, 8)], '8': [(1.0,
-# 10)], '9': [(1.0, 7)], '10': [(1.0, 6)], '11': [(1.0, 14)], '12': [(1.0, 12)],
-#  '13': [(1.0, 13)], '14': [(1.0, 9)], '15': [(1.0, 15)], '16': [(1.0, 20)], '1
-# 7': [(1.0, 18)], '18': [(1.0, 16)], '19': [(1.0, 28)], '22': [(1.0, 22)], '24'
-# : [(1.0, 23)], '25': [(1.0, 24)], '26': [(1.0, 26)], '27': [(1.0, 31)], '28':
-# [(1.0, 30)], '29': [(1.0, 25)], '30': [(1.0, 21)]}
-
-
-
-
-
-
 def get_provenance_bucket_index(pc_score, min_pc_score_train, interval_pc_train, num_gray_codes):
     bucket_index = int(math.floor((pc_score - min_pc_score_train) / (interval_pc_train)))
     if bucket_index < 0:
@@ -253,7 +210,6 @@ def get_provenance_bucket_index(pc_score, min_pc_score_train, interval_pc_train,
 
 def get_pcs_ith_bits_mapping(sh_model):
     pcs_ith_bits_mapping = {}
-    # pcs_ith_bits_mapping_when_multiple_cuts_binary_codes = {}
     pcs_ith_bits_when_multiple_cuts = []
     first_pcs_when_axis_cut_multiple_times =[]
     for ith_pc, pc_mode_cut in enumerate(sh_model.modes.T):
@@ -265,7 +221,6 @@ def get_pcs_ith_bits_mapping(sh_model):
             if cuts_for_ith_pc_len > 1:
                 pcs_ith_bits_when_multiple_cuts.extend(cuts_for_ith_pc_indices[1:])
                 first_pcs_when_axis_cut_multiple_times.append(cuts_for_ith_pc_indices[0][1])
-                # pcs_ith_bits_mapping_when_multiple_cuts_binary_codes[str(ith_pc)] = []
         else:
             pcs_ith_bits_mapping[str(ith_pc)] = []
 
@@ -288,19 +243,7 @@ def get_pc_bitwise_contribution_and_ordering(sh_model):
 
     ordered_keys = []
     for tup in sorted_dict:
-        # print(tup[0], tup[1])
         ordered_keys.append(int(tup[0]))
-
-    print("## sorted_dict ## => {0}".format(sorted_dict))
-    print("## ordered_keys ## => {0}".format(ordered_keys))
-
-    # ordered_keys = []
-    # for ord_val in ordered_values:
-    #     ord_key = int([k for k, v in bits_contribution_and_ordering_per_pcs.items() if ord_val in v][0])
-    #     if not ord_key in ordered_keys:
-    #         ordered_keys.append(ord_key)
-    #
-    # print("## ordered_keys ## => {0}".format(ordered_keys))
 
     return ordered_keys, bits_contribution_and_ordering_per_pcs
 
@@ -309,11 +252,8 @@ def find_median_recursively__short(data, times):
     if times == 1:
         return [np.median(data)]
     else:
-        # print("need to find {0} medians in the list".format(times))
         interval = 100.0 / (times + 1)
         percentiles = [interval * pth for pth in range(1, times + 1)]
-        # print("percentiles is {0}".format(percentiles))
-        # print("interval is {0}".format(interval))
         medians = [np.percentile(data, int(percentile)) for percentile in percentiles]
         return medians
 
@@ -327,32 +267,18 @@ def find_median_recursively__long(data, times):
         if times % 2 == 1:
             times_left = (times - 1) / 2
             data = sorted(data)
-            # print("first median", median)
             if list_length % 2 == 1:
                 median_index = np.where(data == median)[0][0]
                 left_list = data[:median_index]
                 right_list = data[median_index + 1:]
-                # print("list is odd, with median={0} and median_index={1}".format(median, median_index))
-                # print("left_list =>")
-                # print(left_list)
-                # print("right_list =>")
-                # print(right_list)
             else:
                 left_list = data[:int(list_length / 2)]
                 right_list = data[int(list_length / 2):]
-                # print("list is even")
-                # print("left_list =>")
-                # print(left_list)
-                # print("right_list =>")
-                # print(right_list)
 
             return [median, find_median_recursively__long(left_list, times_left), find_median_recursively__long(right_list, times_left)]
         else:
-            # print("need to find {0} medians in the list".format(times))
             interval = 100.0 / (times + 1)
             percentiles = [interval * pth for pth in range(1, times + 1)]
-            # print("percentiles is {0}".format(percentiles))
-            # print("interval is {0}".format(interval))
             medians = [np.percentile(data, int(percentile)) for percentile in percentiles]
             return medians
 
@@ -441,9 +367,6 @@ def check_buckets_balance_constraint(n_bits, u_compactly_binarized_set, log_file
 
     u_compactly_binarized_set_row_concatenated = [''.join(str(x) for x in row) for row in u_compactly_binarized_set]
     unique, counts = np.unique(u_compactly_binarized_set_row_concatenated, return_counts=True)
-    # print("u_compactly_binarized_set_row_concatenated => ")
-    # print(u_compactly_binarized_set_row_concatenated)
-    # print(len(u_compactly_binarized_set_row_concatenated))
 
     if np.log2(u_compactly_binarized_set.shape[0]) < n_bits or n_bits > 62:  # Case 1 (many buckets, few data points): we have way many more buckets than data points > we expect at most 1 elem in each bucket
         avg = 1.0
@@ -508,8 +431,6 @@ def check_buckets_balance_constraint(n_bits, u_compactly_binarized_set, log_file
 
     # -- Close others log file -- #
     log_f.close()
-    # print(dict(zip(unique, counts)))
-    # print(u_compactly_binarized_set, type(u_compactly_binarized_set))
 
 
 def store_num_of_bits_each_pc_gets(modes, log_file):
@@ -548,11 +469,6 @@ def compact_bit_matrix_v2(bit_matrix):
     for bit_vector_row in bit_matrix:
         compact_bit_matrix = (compact_bit_matrix << 1) | bit_vector_row
     return compact_bit_matrix
-    # m = np.array([[1,0,0,1], [0,1,1,0]])
-    # print np.vstack(map(bit2int, m))
-
-
-
 
 
 
@@ -561,7 +477,6 @@ def compact_bit_matrix_v2(bit_matrix):
 def time_process(start, end):
     elapsed_time = end - start
     elapsed_time_formatted = "{0}:{1} => min:sec".format(time.localtime(elapsed_time).tm_min, time.localtime(elapsed_time).tm_sec)
-    # print(elapsed_time_formatted)
     return elapsed_time_formatted
 
 
@@ -601,20 +516,11 @@ def plot_sin(x_lin_data, y_sin_data, color="#808080"):
     x_sin_data_positive = [x_lin_data[i] for i, y_sin_data_row in enumerate(y_sin_data) if y_sin_data_row > 0]
     y_sin_data_negative = [y_sin_data_row for i, y_sin_data_row in enumerate(y_sin_data) if y_sin_data_row <= 0]
     x_sin_data_negative = [x_lin_data[i] for i, y_sin_data_row in enumerate(y_sin_data) if y_sin_data_row <= 0]
-    # plt.fill(x_sin_data_positive, y_sin_data_positive, 'g', x_sin_data_negative, y_sin_data_negative, 'r', alpha=0.5)
-
-    # plt.fill_between(x_sin_data_positive, 0, 1, where=y_sin_data_positive > 0, facecolor='green', alpha=0.5)
-    # plt.fill_between(x_lin_data, 0, 1, where=y_sin_data < 0, facecolor='red', alpha=0.5)
 
     plt.xlim([min(x_lin_data), max(x_lin_data)])
     plt.ylim([-1, 1])
 
-
-
-    # print("x_lin_data", x_lin_data)
-    # print("y_sin_data", y_sin_data)
     plt.axhline(y=0.0, color='#efefef', linestyle='-')
-    # plt.plot(x_lin_data, y_sin_data, color=color)
     plt.plot(x_sin_data_positive, y_sin_data_positive, color='g', linewidth=2)
     plt.plot(x_sin_data_negative, y_sin_data_negative, color='r', linewidth=2)
 
@@ -647,7 +553,6 @@ def plot_2D(dataset_1, show_cut_points, headline, cut_points_pc=[1, 2, 3], color
     ax = fig.add_subplot(1, 1, 1)
     ax.set_xlim([min_x_dim, max_x_dim])
     ax.set_ylim([min_y_dim, max_y_dim])
-    # set_axes_range_2D(ax, max_val_PC, min_val_PC)
 
     ax.scatter(
         dataset_1[:, 0],

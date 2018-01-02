@@ -99,11 +99,6 @@ def compress_dataset__pc_cut_repeated_multiple_bits(data_train_norm, data_test_n
                     provenance_bucket_index = bucket_index if bucket_index < num_gray_codes else num_gray_codes - 1
                     bits_to_attach = [int(bit_str) for bit_str in gray_codes_pc[provenance_bucket_index]]
 
-                    # if dataset_label == "testing" and dp == 49:
-                    #     print("data_box:\n{0}".format(pc_scores))
-                    #     print("ith_bit={0}\n{1}th PC, with pc_cols:{4}\npc_score={2}\nbit_assigned={3}\n----------------------------------------------".format(pth, pc, pc_score, gray_codes_pc[provenance_bucket_index], pcs_ith_bits_mapping[str(pc)]))  # data_box={4} / pc_scores
-                    #     print("")
-
                     # -- Limit hashcode length to whatever needed initially, even if it exceeds -- #
                     if len(data_hashcodes[dp]) < sh_model.n_bits:
                         data_hashcodes[dp] = np.hstack((data_hashcodes[dp], bits_to_attach))
@@ -112,11 +107,6 @@ def compress_dataset__pc_cut_repeated_multiple_bits(data_train_norm, data_test_n
 
     u = np.array(data_hashcodes, dtype=bool)
     u_compactly_binarized = compact_bit_matrix(u)
-
-    # print_help("total_bits", total_bits)
-    # if dataset_label == "testing":
-    #     print_help("u[49]", u[49].astype(int))
-    #     print_help("len(u[49])", len(u[49].astype(int)))
 
     return u, u_compactly_binarized
 

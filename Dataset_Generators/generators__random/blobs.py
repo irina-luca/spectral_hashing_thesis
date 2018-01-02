@@ -4,11 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-# Usage: python "Dataset_Generators/generators__random/blobs.py" -n 1000 -d 3 -seed 12 -blobs 1 -output "Data/Random/blobs_n-1000_d-3_blobs-1_seed-12.train" -if_color_col 0
-
-# -- Used for small experiment to check modes or omega_0 -- #
-# python "Dataset_Generators/generators__random/blobs.py" -n 10000 -d 256 -seed 1 -blobs 3 -output "Data/Clustered_Exp/Clustered_n-10000_d-256_blobs-3_seed-1.train" -if_color_col 0
-
 
 def plot_2D(dataset_1, color="teal"):
     fig = plt.figure(figsize=(5, 5))
@@ -16,9 +11,6 @@ def plot_2D(dataset_1, color="teal"):
 
     # ---- First subplot
     ax = fig.add_subplot(1, 1, 1)
-    # ax.set_xlim([min_x_dim, max_x_dim])
-    # ax.set_ylim([min_y_dim, max_y_dim])
-    # set_axes_range_2D(ax, max_val_PC, min_val_PC)
     ax.scatter(
         dataset_1[:, 0],
         dataset_1[:, 1],
@@ -62,9 +54,6 @@ def main_blobs():
                                                             shuffle=True,
                                                             random_state=seed)
 
-    # plot_2D(dataset_blobs)
-    print(dataset_blobs)
-    print(color)
     color_col = np.array([[x] for x in color])
     dataset_blobs_with_color_col = np.concatenate((dataset_blobs, color_col), axis=1)
 
@@ -73,33 +62,7 @@ def main_blobs():
     else:
         np.savetxt(output_file, dataset_blobs, delimiter=' ')
 
-    # -- Test making data with multivariate distribution -- #
-    # test = np.random.multivariate_normal([1,1], [[0.3, 0.2],[0.2, 0.2]], n_samples)
-    # np.savetxt(output_file, test, delimiter=' ')
     plot_2D(dataset_blobs)
-
-    # # -- Test making random data -- #
-    # random_data = np.random.rand(n_samples, n_dimensions)
-    # np.savetxt(output_file, random_data, delimiter=' ')
-    # plot_2D(random_data)
 
 if __name__ == '__main__':
     main_blobs()
-
-
-# Dog and Cancer examples: if I get asked 'is this a dog?', then I always answer 'yes', which means I always get to recall almost all the dogs, but I never get to 'match' only the good ones, meaning precision is going to be low
-# [[ 0.0104411 ]
-#  [ 0.00394713]
-#  [ 0.002876  ]
-#  [ 0.002876  ]
-#  [ 0.002876  ]]
-# [[ 0.99374131]
-#  [ 0.99930459]
-#  [ 1.        ]
-#  [ 1.        ]
-#  [ 1.        ]]
-# [[ 0.02066507]
-#  [ 0.0078632 ]
-#  [ 0.0057355 ]
-#  [ 0.0057355 ]
-#  [ 0.0057355 ]]

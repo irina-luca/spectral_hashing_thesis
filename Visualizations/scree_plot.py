@@ -55,30 +55,6 @@ def main():
     # -- 4. Calculate Variance and Plot it for #n principal components -- #
     show_pc_variance_plot(eig_vals, 65)
 
-    # A = data_train_norm
-    #
-    # A = np.asmatrix(A.T) * np.asmatrix(A)
-    # U, S, V = np.linalg.svd(A)
-    # eigvals = S**2 / np.cumsum(S)[-1]
-    #
-    # sing_vals = np.arange(num_vars) + 1
-    # print("sing_vals", sing_vals)
-    # print("eigvals", eigvals)
-    # plt.plot(sing_vals[:20], eigvals[:20], color='teal', linestyle='-', linewidth=1)
-    # plt.title('Scree Plot')
-    # plt.xlabel('Principal Component')
-    # plt.ylabel('Eigenvalue')
-    #
-    # # -- Legend stuff -- #
-    # leg = plt.legend(['Eigenvalues from SVD'], loc='best', borderpad=0.3,
-    #                  shadow=False, prop=matplotlib.font_manager.FontProperties(size='small'),
-    #                  markerscale=0.4)
-    # leg.get_frame().set_alpha(0.4)
-    # leg.draggable(state=True)
-    #
-    #
-    # plt.show()
-
 
 if __name__ == '__main__':
     main()

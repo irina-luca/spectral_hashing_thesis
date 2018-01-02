@@ -17,10 +17,7 @@ from compress_bitrepetition import *
 from shparams import ApproxGT
 from distances import *
 from classes import EvalDebugApproachComponents
-# Usage: python test.py -model "./Results/Handmade/Models/h2_bits-2" -testing "./Data/Handmade/h2" -mhd 5 -k 3 -log_file_test "./Results/Handmade/Logs/h2_bits-2.test.log" -log_file_others "./Results/Handmade/Logs/h2_bits-2.others.log"
 
-
-# python train.py -input "./Data/Handmade/h2" -model "./Results/Handmade/Models/h2_bits-2" -bits 2 -log_file_train "./Results/Handmade/Logs/h2_bits-2.train.log"
 
 def read_args():
     parser = argparse.ArgumentParser()
@@ -110,8 +107,6 @@ def evaluate_approximate_gt(
     np.set_printoptions(threshold=np.nan)
     print("# -- START: Common sense check of avg nns in d_ball -- #")
     print("w_true_test_training => \n")
-    # print(w_true_test_training.astype(int))
-    # avg_nn_in_d_ball = np.mean(w_true_test_training)
     stddev_nn_in_d_ball = np.std([sum(row) for row in w_true_test_training])
     print("\nThe # good nns found in the Euclidean d_ball are {0}, and they should be close to k={1}, while the stddev for each query point's nn is {2}\n".format(np.sum(w_true_test_training) / w_true_test_training.shape[0], average_number_neighbors, stddev_nn_in_d_ball))
     print("# -- END: Common sense check of avg nns in d_ball -- # \n")
@@ -163,7 +158,6 @@ def evaluate_approximate_gt(
 def log_evaluation_results(log_file_test_destination, metrics_eval, num_rows):
     # -- Setup log file to save quality measures after testing -- #
     with open(log_file_test_destination, 'w') as log_file_test:
-        # log_file_test.write("hdb          \tprecision   \trecall      \tf_measure\n")
         for row_index in range(0, num_rows):
             log_file_test.write(
                 "\t".join(map(str, [format(score, '.10f') for score in metrics_eval[row_index]])) + "\n")
@@ -262,23 +256,8 @@ def main_test():
         u_testing, u_compactly_binarized_testing = compress_dataset__vanilla(data_test_norm, sh_model, "testing")
 
 
-    # print("# -- u_training => -- #")
-    # # print_compressed_dataset_hashcodes(u_training)
-    # print(u_training.astype(int))
-    # my_training_set = u_training.astype(int)
-    # my_training_set[:, [2, 1]] = my_training_set[:, [1, 2]]
-    # print(my_training_set)
-    # u_training = my_training_set
+
     print("DONE compressing training set\n")
-    #
-    #
-    # print("# -- u_testing => -- #")
-    # # print_compressed_dataset_hashcodes(u_testing)
-    # print(u_testing.astype(int))
-    # my_testing_set = u_testing.astype(int)
-    # my_testing_set[:, [2, 1]] = my_testing_set[:, [1, 2]]
-    # print(my_testing_set)
-    # u_testing = my_testing_set
     print("DONE compressing testing set\n")
 
     start = time.time()
@@ -335,12 +314,12 @@ def main_test():
                                                                 False)
         log_file_test_destination += ".1"
 
-        # print("\nscore_precision")
-        # print(score_precision)
-        # print("score_recall")
-        # print(score_recall)
-        # print("score_f_measure")
-        # print(score_f_measure)
+        print("\nscore_precision")
+        print(score_precision)
+        print("score_recall")
+        print(score_recall)
+        print("score_f_measure")
+        print(score_f_measure)
     else:
         # -- *** Evaluation, Approach 2: with a precise GT, instead of an approximation (done with reverse indices) -- #
         scores_reverse_indices = evaluate_with_reverse_indices(data_train_norm, data_test_norm, u_training, u_testing,
@@ -351,11 +330,6 @@ def main_test():
         print(scores_reverse_indices)
 
     elapsed_time_formatted = time_process(start, time.time())
-    # print(score_precision)
-    # print(score_recall)
-    # print(score_f_measure)
-    #
-    # print(scores_reverse_indices)
 
     rounding_dec = 10
     if eval_type == 0 or eval_type == 1:

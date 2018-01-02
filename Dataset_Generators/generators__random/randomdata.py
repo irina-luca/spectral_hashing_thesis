@@ -2,9 +2,6 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Usage: python "Dataset_Generators/generators__random/randomdata.py" -n 1000 -d 10 -output "Data/Random/Samples/Random__ss-1000__1.train"
-
-
 
 def plot_2D(dataset_1, color="teal"):
     fig = plt.figure(figsize=(5, 5))

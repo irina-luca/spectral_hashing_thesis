@@ -27,41 +27,13 @@ def compress_dataset__vanilla(data_norm, sh_model, dataset_label):
         ys = np.sin(data_norm_pcaed_and_centered * omega_i + math.pi / 2)
 
         # -- START: Plot sine -- #
-        # if dataset_label == "testing":
-        #     print_help("VANILLA, data_box, ith_bit: {0}".format(ith_bit),
-        #                data_norm_pcaed_and_centered * omega_i + math.pi / 2)
-
-        # if dataset_label == "training":
-        # #     print_help("omega_i", omega_i)
         #     plot_sine_partitioning_vanilla_sh(data_norm_pcaed_and_centered, omega_i, ys)
         # -- END: Plot sine -- #
 
         yi = np.prod(ys, axis=1)
-
-        # if dataset_label == "testing":
-        #     nonzero_col_index = np.nonzero(omegas_compress_training[ith_bit, :])[0][0]
-        #     print("data_box:\n{0}".format(data_box[:, nonzero_col_index]))
-        #     print("ith_bit={0}\n{1}th PC\npc_score={2}\nbit_assigned={3}\n----------------------------------------------".format(ith_bit, nonzero_col_index, data_box[49][nonzero_col_index], (yi[49] < 0).astype(int)))  # data_box={4} / pc_scores
-        #     print("")
-
-        # u[:, ith_bit] = yi > 0
-        # OBS(*): I have changed the sign here on purpose, so I get hashcodes in the same manner as the other partitioning methods (easier for comparison in debugging!)
-        # if min(yi) == max(yi):
-        #     print("yi={0}".format(yi))
         u[:, ith_bit] = yi < 0
 
-    ### TRY SWAP DEBUG ###
-    # if dataset_label == "testing":
-    # print("DEBUG, u before swapping columns, for {0} => \n {1}".format(dataset_label, u.astype(int)))
-    # u[:, [2, 1]] = u[:, [1, 2]]
-    # u[:, [3, 4]] = u[:, [4, 3]]
-    # print("DEBUG, u after swapping columns, for {0} => \n {1}".format(dataset_label, u.astype(int)))
-
     u_compactly_binarized = compact_bit_matrix(u)
-
-
-    # if dataset_label == "testing":
-    #     print("u[49]", u[49].astype(int))
 
     return u, u_compactly_binarized
 

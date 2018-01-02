@@ -4,10 +4,6 @@ import pickle
 
 from helpers import *
 
-# Usage Example:
-# [TO DO] : write to log file specifically instead of throwing all the prints there as well
-# python train.py -input "./Data/Handmade/h2" -model "./Results/Handmade/Models/h2_bits-2" -bits 2 -log_file_train "./Results/Handmade/Logs/h2_bits-2.train.log"        # > "./Results/Handmade/Logs/h1--bits-2.log"
-
 
 def read_args():
     # Parse arguments
